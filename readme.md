@@ -1,7 +1,7 @@
-http://container-solutions.com/running-secured-docker-registry-2-0/
-https://github.com/ContainerSolutions/docker-registry-proxy
+Usage:
+------
 
-usage:
+    docker-compose up -d
 
     curl https://localhost:11443/v1/_ping --insecure
 
@@ -10,3 +10,9 @@ usage:
     docker pull hello-world
     docker tag hello-world:latest localhost:443/hello-secure-world:latest
     docker push localhost:443/hello-secure-world:latest
+
+References:
+------
+
+- http://container-solutions.com/running-secured-docker-registry-2-0/
+- https://github.com/ContainerSolutions/docker-registry-proxy
