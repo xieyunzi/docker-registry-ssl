@@ -11,6 +11,16 @@ Usage:
     docker tag hello-world:latest localhost:443/hello-secure-world:latest
     docker push localhost:443/hello-secure-world:latest
 
+generate your own certificate:
+
+    openssl genrsa 2048 -out certs/docker-registry.key
+    chmod 400 certs/docker-registry.key
+    openssl req -new -x509 -nodes -sha1 -days 365 -key certs/docker-registry.key -out certs/docker-registry.crt
+
+generate your htpasswd
+
+    htpasswd -c htpasswd exampleuser
+
 References:
 ------
 
