@@ -1,24 +1,17 @@
 version: '2'
 services:
   registry:
+    restart: always
     image: registry:2
-    container_name: docker-registry
     ports:
-      - "5000"
+      - 5000:5000
     environment:
-      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /data
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
     volumes:
-      - ./data:/data
-  docker-registry-proxy:
-    image: containersol/docker-registry-proxy
-    ports:
-      - "11443:443"
-    environment:
-      REGISTRY_HOST: "docker-registry"
-      REGISTRY_PORT: "5000"
-      SERVER_NAME: "localhost"
-    volumes:
-      - ./htpasswd:/etc/nginx/.htpasswd:ro
-      - ./certs:/etc/nginx/ssl:ro
-    links:
-      - registry
+      - ./data:/var/lib/registry
+      - ./certs:/certs
+      - ./auth:/auth

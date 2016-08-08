@@ -3,26 +3,39 @@ Usage:
 
     docker-compose up -d
 
-    curl https://localhost:11443/v1/_ping --insecure
+    curl https://localhost:5000/v1/_ping --insecure
 
     # username: xyz, password: xyz
-    docker login -u <username> -p <password> -e <email> localhost:443
+    docker login -u <username> -p <password> -e <email> localhost:5000
     docker pull hello-world
-    docker tag hello-world:latest localhost:443/hello-secure-world:latest
-    docker push localhost:443/hello-secure-world:latest
+    docker tag hello-world:latest localhost:5000/hello-secure-world:latest
+    docker push localhost:5000/hello-secure-world:latest
 
 generate your own certificate:
 
-    openssl genrsa 2048 -out certs/docker-registry.key
-    chmod 400 certs/docker-registry.key
-    openssl req -new -x509 -nodes -sha1 -days 365 -key certs/docker-registry.key -out certs/docker-registry.crt
+    ./certs/gen.sh
 
 generate your htpasswd
 
-    htpasswd -c htpasswd exampleuser
+    htpasswd -cB auth/htpasswd exampleuser
+
+Issues:
+-------
+
+### remote error: bad certificate
+
+on client
+
+- sudo cp certs/domain.crt /etc/docker/certs.d/myregistrydomain.com/ca.crt
+- add --insecure-registry myregistrydomain.com to DOCKER_OPTS in /etc/default/docker
+
+restart docker daemon
 
 References:
-------
+-----------
 
+- https://docs.docker.com/registry/deploying/
+- http://tech.paulcz.net/2016/01/deploying-a-secure-docker-registry/
 - http://container-solutions.com/running-secured-docker-registry-2-0/
 - https://github.com/ContainerSolutions/docker-registry-proxy
+- https://daviddaeschler.com/2016/01/18/docker-registry-auth-issues/
